@@ -112,13 +112,15 @@ def rndVsRnd(size):
 	hasWon = False
 	while(movesLeft > 0) and not hasWon:
 		# player 1
-		world = rndMove(world, 1.0)
+		if (movesLeft > 0):
+			world = rndMove(world, 1.0)
 		hasWon = checkWin(world, 1.0)
 		# print world
 		printWorld(world);
 
 		# player 2
-		world = rndMove(world, -1);
+		if (movesLeft > 0):
+			world = rndMove(world, -1);
 		hasWon = checkWin(world, -1)
 		# repeat till end - check who won
 
