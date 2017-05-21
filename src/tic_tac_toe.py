@@ -1,7 +1,7 @@
+# Jason Chalom 711985 May 2017
 # Handler for Tic Tac Toe
 
 import numpy as np
-import matplotlib.pyplot as pl
 # from random import randInt
 
 def initGameWorld(size):
