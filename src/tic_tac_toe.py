@@ -48,7 +48,14 @@ def numberMovesLeft(world):
 
 	return count
 
-def checkWin(world, player):
+def checkDraw(world, moveCount):
+	size = world.shape[0]
+	# draw
+	if(moveCount == (size**2 - 1.0)):
+		return True
+	return False
+
+def checkWin(world, player=1.0):
 	size = world.shape[0]
 	
 	rowcount = 0
@@ -57,29 +64,30 @@ def checkWin(world, player):
 	diag2count = 0
 
 	for i in range(size):
-		for j in range(size):
-			if world[i][j] == player:
-				rowcount = rowcount+1
 		rowcount = 0
-
-	for i in range(size):
-		for j in range(size):
-			if world[j][i] == player:
-				rowcount = rowcount+1
 		colcount = 0
 
-	for i in range(size):
-		if world[i][i] == player:
-			diag1count = diag1count+1
-		if world[i][size-1-i] == player:
-			diag2count = diag2count+1
+		for j in range(size):
+			if world[i][j] == player:
+				rowcount = rowcount + 1
+			if world[j][i] == player:
+				colcount = colcount + 1
 
-	if rowcount == size:
-		return True
-	if colcount == size:
-		return True
-	if diag1count == size or diag2count == size:
-		return True
+		if world[i][i] == player:
+			diag1count = diag1count + 1
+
+		if world[i][size-1-i] == player:
+			diag2count = diag2count + 1
+
+		if rowcount >= size:
+			return True
+		if colcount >= size:
+			return True
+		if diag1count == size or diag2count == size:
+			return True
+
+		rowcount = 0
+		colcount = 0
 
 	return False
 
@@ -113,22 +121,32 @@ def rndVsRnd(size):
 
 	movesLeft = numberMovesLeft(world)
 	hasWon = False
+	moveCount = 0
 	while(movesLeft > 0) and (hasWon == False):
 		# player 1
-		if (movesLeft > 0):
+		if (movesLeft > 0) and (hasWon == False):
+			print("Player 1:")
 			world = rndMove(world, 1.0)
-		hasWon = checkWin(world, 1.0)
-		# print world
-		printWorld(world);
+			hasWon = checkWin(world, 1.0)
+			if hasWon:
+				print("Player 1 Won!")
+			moveCount = moveCount+1;
+			printWorld(world)
 
 		# player 2
-		# if (movesLeft > 0):
-		# 	world = rndMove(world, -1);
-		# hasWon = checkWin(world, -1)
-		# # repeat till end - check who won
+		if (movesLeft > 0) and (hasWon == False):
+			print("Player 2:")
+			world = rndMove(world, -1);
+			hasWon = checkWin(world, -1)
+			if hasWon:
+				print("Player 2 Won!")
+			moveCount = moveCount+1;
+			printWorld(world)
 
-		# if (movesLeft > 0):
-		# 	movesLeft = numberMovesLeft(world)
+		if (movesLeft > 0):
+			movesLeft = numberMovesLeft(world)
 		print("Moves Left: %d\n"%(movesLeft))
 
-rndVsRnd(3)
+	if(checkDraw(world, moveCount)):
+		print("It's a draw!")
+# rndVsRnd(3)
