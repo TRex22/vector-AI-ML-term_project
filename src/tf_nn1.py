@@ -18,11 +18,8 @@ num_random_matches = 1000000
 half_matches = num_random_matches/2
 
 # the data, shuffled and split between train and test sets
-# (x_train, y_train), (x_test, y_test) = mnist.load_data()
-# xinput = np.loadtxt(open("training.txt"), delimiter=",")
-# b = a[a[:, 2] > 50.0]
-xinput = u.generateGameDataUsingRnd(3, num_random_matches)
-np.savez_compressed("million_alphatoe.dat", xinput=xinput) 
+# xinput = u.generateGameDataUsingRnd(3, num_random_matches)
+# np.savez_compressed("million_alphatoe.dat", xinput=xinput) 
 
 xinput = u.generateGameDataUsingRnd(board_size, num_random_matches)
 
@@ -40,6 +37,7 @@ y_test = xwin_player1[half_matches:num_random_matches, board_size*board_size:2*b
 reward_test = xwin_player1[half_matches:num_random_matches, -1]
 
 print('x_train.shape: %s \ny_train.shape: %s \nx_test.shape: %s \ny_test.shape: %s' %(x_train.shape, y_train.shape, x_test.shape, y_test.shape))
+np.savez_compressed("data/3_3_million.dat", xinput=xinput, xwin_player1=xwin_player1, xdraw_player2=xdraw_player2) 
 
 # x_train /= 255
 # x_test /= 255
@@ -79,11 +77,9 @@ for layer in model.layers:
     kernel.append([weights[0]])
     bias.append([weights[1]])
 
-outfile = "exp1.dat"
-
 data1 = np.vstack((bias[0], kernel[0]))
 data2 = np.vstack((bias[1], kernel[1]))
 data3 = np.vstack((bias[2], kernel[2]))
 # data4 = np.vstack((bias[3], kernel[3]))
 
-np.savez_compressed(outfile, score=score, data1=data1, data2=data2) #, data3=data3
+np.savez_compressed("data/NN_natural_3_3.dat", score=score, data1=data1, data2=data2, data3=data3) #, data3=data3
