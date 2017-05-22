@@ -10,7 +10,7 @@ import h5py
 
 batch_size = 128
 # num_classes = 2
-epochs = 40
+epochs = 50
 
 board_size = 3
 nn = board_size*board_size
@@ -18,9 +18,6 @@ num_random_matches = 1000000
 half_matches = num_random_matches/2
 
 # the data, shuffled and split between train and test sets
-# xinput = u.generateGameDataUsingRnd(3, num_random_matches)
-# np.savez_compressed("million_alphatoe.dat", xinput=xinput) 
-
 xinput = u.generateGameDataUsingRnd(board_size, num_random_matches)
 
 xwin_player1 = xinput[xinput[:, 2*board_size*board_size+3] == 1]
@@ -77,19 +74,18 @@ for layer in model.layers:
     kernel.append([weights[0]])
     bias.append([weights[1]])
 
-# print(np.array(bias).shape)                                                                                                                     
-# print(np.array(kernel).shape)
-
-print(np.array(bias[0][0]).shape)                                                                                                                     
-print(np.array(kernel[0][0]).shape)
-
-# data1 = np.concatenate((np.array(bias[0][0]), np.array(kernel[0][0])), axis=0)
-# data2 = np.concatenate((np.array(bias[1][0]), np.array(kernel[1][0])), axis=0)
-# data3 = np.concatenate((np.array(bias[2][0]), np.array(kernel[2][0])), axis=0)
-
 data1 = np.vstack((bias[0][0], kernel[0][0]))
 data2 = np.vstack((bias[1][0], kernel[1][0]))
 data3 = np.vstack((bias[2][0], kernel[2][0]))
 # data4 = np.vstack((bias[3], kernel[3]))
 
-np.savez_compressed("data/NN_natural_3_3.dat", score=score, data1=data1, data2=data2, data3=data3) #, data3=data3
+np.savez_compressed("data/NN_natural_3_3.dat", score=score, data1=data1, data2=data2, data3=data3)
+
+# print(np.array(bias).shape)                                                                                                                     
+# print(np.array(kernel).shape)
+# print(np.array(bias[0][0]).shape)                                                                                                                     
+# print(np.array(kernel[0][0]).shape)
+
+# data1 = np.concatenate((np.array(bias[0][0]), np.array(kernel[0][0])), axis=0)
+# data2 = np.concatenate((np.array(bias[1][0]), np.array(kernel[1][0])), axis=0)
+# data3 = np.concatenate((np.array(bias[2][0]), np.array(kernel[2][0])), axis=0)
