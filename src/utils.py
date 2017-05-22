@@ -132,12 +132,12 @@ def runRndAiGame(board_size, num_game):
             
 	if(game.checkDraw(world, moveCount)):
 		for i in range(world_list.shape[0]):
-			world_list[i][2*board_size*board_size+4] = 0.5
+			world_list[i][2*board_size*board_size+3] = 0.5
 	else:
 		for i in range(world_list.shape[0]):
 			if player1won:
-				if world_list[i][2*board_size*board_size+3] == 1:
-					world_list[i][2*board_size*board_size+4] = 1
+				if world_list[i][2*board_size*board_size+2] == 1:
+					world_list[i][2*board_size*board_size+3] = 1
 
 	return world_list
 
