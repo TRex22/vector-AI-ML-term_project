@@ -31,6 +31,19 @@ def findXY(world, newWorld):
 				return i,j
 	return x,y
 
+def doGoodMove(world, player):
+	size = world.shape[0]
+
+	if (size % 2 == 0): 
+		# left top corner
+		world[0][0] = player
+	else:
+		central = size/2
+		world[central][central] = player
+
+	return world
+
+
 def rndVsRnd(size):
 	world = game.initGameWorld(size)
 
@@ -80,6 +93,8 @@ def runRndAiGame(board_size, num_game):
 	world = game.initGameWorld(board_size)
 	movesLeft = game.numberMovesLeft(world)
 	hasWon = False
+	player1won = False
+	player2won = False
 	moveCount = 0
 
 	while(movesLeft > 0) and (hasWon == False):
@@ -89,9 +104,9 @@ def runRndAiGame(board_size, num_game):
 			hasWon = game.checkWin(world, 1) 
 			
 			if hasWon:
-				world_list[moveCount] = np.concatenate((flattenWorld(world), flattenWorld(newWorld), [x], [y], [1], [1]), axis=0)
-			elif not hasWon:
-				world_list[moveCount] = np.concatenate((flattenWorld(world), flattenWorld(newWorld), [x], [y], [1], [0]), axis=0)
+				player1won = True
+
+			world_list[moveCount] = np.concatenate((flattenWorld(world), flattenWorld(newWorld), [x], [y], [1], [0]), axis=0)
 			# print(findXY(world, newWorld))
 			world = newWorld
 			moveCount = moveCount+1	
@@ -104,10 +119,10 @@ def runRndAiGame(board_size, num_game):
 			newWorld, x, y = game.rndMoveXY(world, -1)
 			hasWon = game.checkWin(world, -1)
 
-			if hasWon:
-				world_list[moveCount] = np.concatenate((flattenWorld(world), flattenWorld(newWorld), [x], [y], [2], [0]), axis=0)
-			elif not hasWon:
-				world_list[moveCount] = np.concatenate((flattenWorld(world), flattenWorld(newWorld), [x], [y], [2], [1]), axis=0) # world x,y 1
+			if hasWon and not player1won:
+				player2won = True
+
+			world_list[moveCount] = np.concatenate((flattenWorld(world), flattenWorld(newWorld), [x], [y], [2], [0]), axis=0) # world x,y 1
 
 			world = newWorld
 			moveCount = moveCount+1			
@@ -117,7 +132,11 @@ def runRndAiGame(board_size, num_game):
             
 	if(game.checkDraw(world, moveCount)):
 		for i in range(world_list.shape[0]):
-			world_list[i][board_size*board_size+2] = 0.5
+			world_list[i][2*board_size*board_size+4] = 0.5
+	else:
+		for i in range(world_list.shape[0]):
+			if player1won:
+				if world_list[i][2*board_size*board_size+4] = 1
 
 	return world_list
 
