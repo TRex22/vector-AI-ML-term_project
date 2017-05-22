@@ -77,9 +77,12 @@ for layer in model.layers:
     kernel.append([weights[0]])
     bias.append([weights[1]])
 
-data1 = np.array((bias[0], kernel[0]))
-data2 = np.array((bias[1], kernel[1]))
-data3 = np.array((bias[2], kernel[2]))
+print(bias.shape)
+print(kernel.shape)
+
+data1 = np.concatenate((np.array(bias[0]), np.array(kernel[0])), axis=0)
+data2 = np.concatenate((np.array(bias[1]), np.array(kernel[1])), axis=0)
+data3 = np.concatenate((np.array(bias[2]), np.array(kernel[2])), axis=0)
 
 # data1 = np.vstack((bias[0], kernel[0]))
 # data2 = np.vstack((bias[1], kernel[1]))
