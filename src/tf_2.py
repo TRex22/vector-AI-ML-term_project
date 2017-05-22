@@ -17,12 +17,12 @@ epochs = 40
 # xinput = np.loadtxt(open("training.txt"), delimiter=",")
 # b = a[a[:, 2] > 50.0]
 print("generate data....")
-xinput = u.generateGameDataUsingRnd(3, 10)
+xinput = u.generateGameDataUsingRnd(3, 100)
 
 xwin = xinput[xinput[:, 20] == 1];
 print(xwin.shape)
 
-np.savez_compressed("100_games.dat", xinput=xinput, xwin=xwin) 
+# np.savez_compressed("100_games.dat", xinput=xinput, xwin=xwin) 
 
 # y_train = xinput[:50000, -1]
 # x_test = xinput[50000 : 60000, :784]

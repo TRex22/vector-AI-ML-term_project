@@ -127,6 +127,7 @@ def generateGameDataUsingRnd(board_size, num_game):
 	xinput = np.zeros((num_game*nn, 2*nn+3)) #x,y inferred from newWorld
 
 	for i in range(num_game):
+		print(i)
 		rndGame = runRndAiGame(board_size, num_game)
 		for j in range(rndGame.shape[0]):
 			xinput[i+j] = rndGame[j]
