@@ -46,8 +46,8 @@ print('x_train.shape: %s \ny_train.shape: %s \nx_test.shape: %s \ny_test.shape: 
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
-y_train = keras.utils.to_categorical(y_train)
-y_test = keras.utils.to_categorical(y_test)
+# y_train = keras.utils.to_categorical(y_train)
+# y_test = keras.utils.to_categorical(y_test)
 
 model = Sequential()
 model.add(Dense(nn, activation='sigmoid', input_shape=(nn,)))
