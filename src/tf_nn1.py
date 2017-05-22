@@ -83,13 +83,13 @@ for layer in model.layers:
 print(np.array(bias[0][0]).shape)                                                                                                                     
 print(np.array(kernel[0][0]).shape)
 
-data1 = np.concatenate((np.array(bias[0][0]), np.array(kernel[0][0])), axis=0)
-data2 = np.concatenate((np.array(bias[1][0]), np.array(kernel[1][0])), axis=0)
-data3 = np.concatenate((np.array(bias[2][0]), np.array(kernel[2][0])), axis=0)
+# data1 = np.concatenate((np.array(bias[0][0]), np.array(kernel[0][0])), axis=0)
+# data2 = np.concatenate((np.array(bias[1][0]), np.array(kernel[1][0])), axis=0)
+# data3 = np.concatenate((np.array(bias[2][0]), np.array(kernel[2][0])), axis=0)
 
-# data1 = np.vstack((bias[0], kernel[0]))
-# data2 = np.vstack((bias[1], kernel[1]))
-# data3 = np.vstack((bias[2], kernel[2]))
+data1 = np.vstack((bias[0][0], kernel[0][0]))
+data2 = np.vstack((bias[1][0], kernel[1][0]))
+data3 = np.vstack((bias[2][0], kernel[2][0]))
 # data4 = np.vstack((bias[3], kernel[3]))
 
 np.savez_compressed("data/NN_natural_3_3.dat", score=score, data1=data1, data2=data2, data3=data3) #, data3=data3
