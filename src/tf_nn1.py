@@ -14,7 +14,7 @@ epochs = 40
 
 board_size = 3
 nn = board_size*board_size
-num_random_matches = 100000 #1000000
+num_random_matches = 1000000
 
 # the data, shuffled and split between train and test sets
 # (x_train, y_train), (x_test, y_test) = mnist.load_data()
