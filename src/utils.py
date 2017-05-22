@@ -84,6 +84,7 @@ def runRndAiGame(board_size, num_game):
 
 	while(movesLeft > 0) and (hasWon == False):
 		# player 1
+        print("player1:")
 		if (movesLeft > 0) and (hasWon == False):
 			newWorld, x, y = game.rndMoveXY(world, 1)
 			hasWon = game.checkWin(world, 1) 
@@ -95,7 +96,7 @@ def runRndAiGame(board_size, num_game):
 			# print(findXY(world, newWorld))
 			world = newWorld
 			moveCount = moveCount+1		
-
+        print("player2:")
 		# player 2
 		if (movesLeft > 0) and (hasWon == False):
 			newWorld, x, y = game.rndMoveXY(world, -1)
@@ -111,7 +112,7 @@ def runRndAiGame(board_size, num_game):
 
 		if (movesLeft > 0):
 			movesLeft = game.numberMovesLeft(world)
-
+    print("draw:")
 	if(game.checkDraw(world, moveCount)):
 		for i in range(world_list.shape[0]):
 			world_list[i][board_size*board_size+2] = 0.5
@@ -127,7 +128,6 @@ def generateGameDataUsingRnd(board_size, num_game):
 	xinput = np.zeros((num_game*nn, 2*nn+3)) #x,y inferred from newWorld
 
 	for i in range(num_game):
-		print(i)
 		rndGame = runRndAiGame(board_size, num_game)
 		for j in range(rndGame.shape[0]):
 			xinput[i+j] = rndGame[j]
