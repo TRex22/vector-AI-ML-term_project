@@ -1,18 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as pl
 
-def plot_data(x, name=''):
-    """
-    plots the input data set
-    """
-    pl.figure()
-    pl.scatter(x[0,:], x[1,:],  c='b', marker='o', s=64, label='Data')
-    pl.xlabel(r'$x_{1}$', fontsize=16)
-    pl.ylabel(r'$x_{2}$', fontsize=16)
-    pl.axes().set_aspect('equal','datalim')
-    if name != '':
-        pl.savefig(name, bbox_inches='tight', dpi=300)
-    
 def compute_mean(x):
     """
     computes and returns the mean vector of the input data
@@ -20,23 +8,23 @@ def compute_mean(x):
     m = np.mean(x, axis=1)[:, np.newaxis]
     return m
     
-def compute_covariance(x):
+def compute_covariance(X):
     """
     computes and returns the covariance matrix of the input data x
     """
-    X = x.copy()
+    X = X.copy()
     m = compute_mean(X)
     N = X.shape[1]
     X = X - m
     S = 1.0/(N-1) * np.dot(X, X.T)
     return S
 
-def compute_principal_components(x):
+def compute_principal_components(X):
     """
     computes and returns the principal components
     """
     # compute the covariance matrix
-    S = compute_covariance(x)
+    S = compute_covariance(X)
     # compute eigenvalues and eigenvectors
     l, p = np.linalg.eigh(S)
     # sort the eigenvectors in descending order
@@ -46,7 +34,7 @@ def compute_principal_components(x):
     return P, L
 
 def select_principal_components(P, L, delta):
-    """75
+    """
     selects and returns principal components considering
     desired retained variation
     """
@@ -56,30 +44,19 @@ def select_principal_components(P, L, delta):
     Ld = L[0:d, 0:d]
     return Pd, Ld, d
 
-def plot_principal_components(x, Pd, Ld, name=''):
+def project_onto_eigenvector_space(X, Pd, m):
     """
-    plots the principal vectors
+    projects data matrix onto eigenvector space
     """
-    plot_data(x)
-    m = compute_mean(x)
-    d = Ld.shape[0]
-    pl.scatter(m[0,0], m[1,0], c='g', marker='o', s=32)
-    colors = ['r', 'g']
-    title = ''
-    for i in np.arange(d):
-        # project the data along the principal component
-        w = np.dot((x-m).T,Pd[:, i][:, np.newaxis])
-        p = m + np.max(np.abs(w)) * Pd[:, i][:, np.newaxis]
-        mp = np.hstack((m,p))
-        pl.plot(mp[0,:], mp[1,:], c=colors[i], linewidth=2)
-        p = m - np.max(np.abs(w)) * Pd[:, i][:, np.newaxis]
-        mp = np.hstack((m,p))
-        pl.plot(mp[0,:], mp[1,:], c=colors[i], linewidth=2,label=('PC'+str(i+1)))
-        title = title + r'$\lambda_' + str(i+1) + r'$ = ' + '{:.4f}'.format(Ld[i,i]) + ' '
-    pl.legend()
-    pl.title(title)
-    if name != '':
-        pl.savefig(name, bbox_inches='tight', dpi=300)
+    W = np.dot(Pd.T, (X-m))
+    return W
+
+def reconstruct_data(Pd, W, m):
+    """
+    reconstructs data matrix using d-rank approximation
+    """
+    Xhat = m + np.dot(Pd, W)
+    return Xhat    
 
 # pl.close('all')   
 # # generate a synthetic data set1

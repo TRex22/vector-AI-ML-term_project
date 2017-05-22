@@ -21,8 +21,10 @@ half_matches = num_random_matches/2
 xinput = u.generateGameDataUsingRnd(board_size, num_random_matches)
 
 xwin_player1 = xinput[xinput[:, 2*board_size*board_size+3] == 1]
-xdraw_player2 = xinput[xinput[:, 2*board_size*board_size+3] == 2] # player 2 draw as player 1 should never draw
+xdraw_player2 = xinput[xinput[:, 2*board_size*board_size+2] == 2] # player 2 draw as player 1 should never draw
 xdraw_player2 = xdraw_player2[xdraw_player2[:, 2*board_size*board_size+3] == 0.5] # 0 is a loss to player 1
+
+half_matches = xwin_player1.shape[0]/2
 
 print(xwin_player1.shape)
 x_train = xwin_player1[:half_matches, :board_size*board_size]
@@ -62,8 +64,8 @@ history = model.fit(x_train, y_train,
                     verbose=1,
                     validation_data=(x_test, y_test))
 score = model.evaluate(x_test, y_test, verbose=0)
-print('Test loss:', score[0])
-print('Test accuracy:', score[1])
+# print('Test loss:', score[0])
+# print('Test accuracy:', score[1])
 
 bias = []
 kernel = []

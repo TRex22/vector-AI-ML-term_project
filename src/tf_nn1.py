@@ -6,7 +6,10 @@ from keras.layers import Dense, Dropout
 from keras.optimizers import RMSprop
 import numpy as np
 import h5py
-
+# x_train = xinput[:50000, :784];
+# y_train = xinput[:50000, -1];
+# x_test = xinput[50000 : 60000, :784];
+# y_test = xinput[50000 : 60000, -1];
 
 batch_size = 128
 # num_classes = 2
@@ -21,8 +24,10 @@ half_matches = num_random_matches/2
 xinput = u.generateGameDataUsingRnd(board_size, num_random_matches)
 
 xwin_player1 = xinput[xinput[:, 2*board_size*board_size+3] == 1]
-xdraw_player2 = xinput[xinput[:, 2*board_size*board_size+3] == 2] # player 2 draw as player 1 should never draw
+xdraw_player2 = xinput[xinput[:, 2*board_size*board_size+2] == 2] # player 2 draw as player 1 should never draw
 xdraw_player2 = xdraw_player2[xdraw_player2[:, 2*board_size*board_size+3] == 0.5] # 0 is a loss to player 1
+
+half_matches = xwin_player1.shape[0]/2
 
 print(xwin_player1.shape)
 x_train = xwin_player1[:half_matches, :board_size*board_size]
