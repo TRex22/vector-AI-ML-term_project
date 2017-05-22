@@ -101,6 +101,9 @@ def rndMove(world, player):
 
 	# can create unending loop if no moves left
 	movesLeft = numberMovesLeft(world)
+	if movesLeft == 0:
+		return world, -1, -1
+    
 	while madeMove == False:
 		rndNumbers = np.random.randint(size, size=2)
 		x = rndNumbers[0] # 0 to size-1 ie the coords
@@ -121,6 +124,9 @@ def rndMoveXY(world, player):
 
 	# can create unending loop if no moves left
 	movesLeft = numberMovesLeft(world)
+	if movesLeft == 0:
+		return world, -1, -1
+    
 	while madeMove == False:
 		rndNumbers = np.random.randint(size, size=2)
 		x = rndNumbers[0] # 0 to size-1 ie the coords

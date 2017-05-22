@@ -17,12 +17,17 @@ epochs = 40
 # xinput = np.loadtxt(open("training.txt"), delimiter=",")
 # b = a[a[:, 2] > 50.0]
 print("generate data....")
-xinput = u.generateGameDataUsingRnd(3, 100)
+xinput = u.generateGameDataUsingRnd(3, 1000000)
 
-xwin = xinput[xinput[:, 20] == 1];
-print(xwin.shape)
+xwin_player1 = xinput[xinput[:, 21] == 1]
 
-# np.savez_compressed("100_games.dat", xinput=xinput, xwin=xwin) 
+xdraw_player2 = xinput[xinput[:, 20] == 2] # player 2 draw as player 1 should never draw
+xdraw_player2 = xdraw_player2[xdraw_player2[:, 21] == 0]
+
+print(xwin_player1.shape)
+print(xdraw_player2.shape)
+
+np.savez_compressed("million_games.dat", xinput=xinput, xwin_player1=xwin_player1, xdraw_player2=xdraw_player2) 
 
 # y_train = xinput[:50000, -1]
 # x_test = xinput[50000 : 60000, :784]
