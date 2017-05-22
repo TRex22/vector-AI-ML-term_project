@@ -77,9 +77,13 @@ for layer in model.layers:
     kernel.append([weights[0]])
     bias.append([weights[1]])
 
-data1 = np.vstack((bias[0], kernel[0]))
-data2 = np.vstack((bias[1], kernel[1]))
-data3 = np.vstack((bias[2], kernel[2]))
+data1 = np.concatenate((bias[0], kernel[0]), axis=0)
+data2 = np.concatenate((bias[1], kernel[1]), axis=0)
+data3 = np.concatenate((bias[2], kernel[2]), axis=0)
+
+# data1 = np.vstack((bias[0], kernel[0]))
+# data2 = np.vstack((bias[1], kernel[1]))
+# data3 = np.vstack((bias[2], kernel[2]))
 # data4 = np.vstack((bias[3], kernel[3]))
 
 np.savez_compressed("data/NN_natural_3_3.dat", score=score, data1=data1, data2=data2, data3=data3) #, data3=data3
