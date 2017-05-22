@@ -15,6 +15,7 @@ epochs = 40
 board_size = 3
 nn = board_size*board_size
 num_random_matches = 1000000
+half_matches = num_random_matches/2
 
 # the data, shuffled and split between train and test sets
 # (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -30,13 +31,13 @@ xdraw_player2 = xinput[xinput[:, 2*board_size*board_size+3] == 2] # player 2 dra
 xdraw_player2 = xdraw_player2[xdraw_player2[:, 2*board_size*board_size+3] == 0.5] # 0 is a loss to player 1
 
 print(xwin_player1.shape)
-x_train = xwin_player1[:50000, :board_size*board_size]
-y_train = xwin_player1[:50000, board_size*board_size:2*board_size*board_size]
-reward_train = xwin_player1[:50000, -1]
+x_train = xwin_player1[:half_matches, :board_size*board_size]
+y_train = xwin_player1[:half_matches, board_size*board_size:2*board_size*board_size]
+reward_train = xwin_player1[:half_matches, -1]
 
-x_test = xwin_player1[50000:100000, :board_size*board_size]
-y_test = xwin_player1[50000:100000, board_size*board_size:2*board_size*board_size]
-reward_test = xwin_player1[50000:100000, -1]
+x_test = xwin_player1[half_matches:num_random_matches, :board_size*board_size]
+y_test = xwin_player1[half_matches:num_random_matches, board_size*board_size:2*board_size*board_size]
+reward_test = xwin_player1[half_matches:num_random_matches, -1]
 
 print('x_train.shape: %s \ny_train.shape: %s \nx_test.shape: %s \ny_test.shape: %s' %(x_train.shape, y_train.shape, x_test.shape, y_test.shape))
 

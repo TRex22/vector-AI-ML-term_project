@@ -20,11 +20,11 @@ def determineMove(output_layer):
 
 	return x,y;
 
-# 768x65x10 with bias at each level
+# 9x9x9 with bias at each level
 def basic_3_NN(world, player):
 	x = u.standardizeInput(world, player)
 
-	
+
 
 	x,y = determineClass(layer4);
 	return x,y;
