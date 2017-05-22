@@ -77,6 +77,9 @@ for layer in model.layers:
     kernel.append([weights[0]])
     bias.append([weights[1]])
 
+print(bias.shape)
+print(kernel.shape)
+
 data1 = np.concatenate((bias[0], kernel[0]), axis=0)
 data2 = np.concatenate((bias[1], kernel[1]), axis=0)
 data3 = np.concatenate((bias[2], kernel[2]), axis=0)
