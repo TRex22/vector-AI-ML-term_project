@@ -136,7 +136,8 @@ def runRndAiGame(board_size, num_game):
 	else:
 		for i in range(world_list.shape[0]):
 			if player1won:
-				if world_list[i][2*board_size*board_size+4] = 1
+				if world_list[i][2*board_size*board_size+3] == 1:
+					world_list[i][2*board_size*board_size+4] = 1
 
 	return world_list
 
