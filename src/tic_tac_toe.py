@@ -9,7 +9,7 @@ def initGameWorld(size):
 
 	for i in range(size):
 		for j in range(size):
-			world[i][j] = 0;
+			world[i][j] = 0
 	return world
 
 def printWorld(world):
@@ -39,7 +39,7 @@ def checkMove(world, x, y):
 
 def numberMovesLeft(world):
 	size = world.shape[0]
-	count = 0;
+	count = 0
 
 	for i in range(size):
 		for j in range(size):
@@ -97,10 +97,10 @@ def rndMove(world, player):
 	x = 0.0
 	y = 0.0
 
-	madeMove = False;
+	madeMove = False
 
 	# can create unending loop if no moves left
-	movesLeft = numberMovesLeft(world);
+	movesLeft = numberMovesLeft(world)
 	while madeMove == False:
 		rndNumbers = np.random.randint(size, size=2)
 		x = rndNumbers[0] # 0 to size-1 ie the coords
@@ -108,45 +108,25 @@ def rndMove(world, player):
 
 		madeMove = checkMove(world, x, y)
 
-	world[x][y] = player;
-	return world;
+	world[x][y] = player
+	return world
 
-def rndVsRnd(size):
-	world = initGameWorld(size)
+def rndMoveXY(world, player):
+	size = world.shape[0]
 
-	print("Welcome to TicTacToe!")
-	print("\n####################")
+	x = 0.0
+	y = 0.0
 
-	printWorld(world)
+	madeMove = False
 
+	# can create unending loop if no moves left
 	movesLeft = numberMovesLeft(world)
-	hasWon = False
-	moveCount = 0
-	while(movesLeft > 0) and (hasWon == False):
-		# player 1
-		if (movesLeft > 0) and (hasWon == False):
-			print("Player 1:")
-			world = rndMove(world, 1.0)
-			hasWon = checkWin(world, 1.0)
-			if hasWon:
-				print("Player 1 Won!")
-			moveCount = moveCount+1;
-			printWorld(world)
+	while madeMove == False:
+		rndNumbers = np.random.randint(size, size=2)
+		x = rndNumbers[0] # 0 to size-1 ie the coords
+		y = rndNumbers[1] # 0 to size-1 ie the coords
 
-		# player 2
-		if (movesLeft > 0) and (hasWon == False):
-			print("Player 2:")
-			world = rndMove(world, -1);
-			hasWon = checkWin(world, -1)
-			if hasWon:
-				print("Player 2 Won!")
-			moveCount = moveCount+1;
-			printWorld(world)
+		madeMove = checkMove(world, x, y)
 
-		if (movesLeft > 0):
-			movesLeft = numberMovesLeft(world)
-		print("Moves Left: %d\n"%(movesLeft))
-
-	if(checkDraw(world, moveCount)):
-		print("It's a draw!")
-# rndVsRnd(3)
+	world[x][y] = player
+	return world, x, y
