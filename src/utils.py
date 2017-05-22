@@ -20,6 +20,17 @@ def thresholdOutput(output):
 
 	return output
 
+def findXY(world, newWorld):
+	size = world.shape[0]
+	x = -1
+	y = -1
+
+	for i in range(size):
+		for j in range(size):
+			if not (world[i][j] == newWorld[i][j]):
+				return i,j
+	return x,y
+
 def rndVsRnd(size):
 	world = game.initGameWorld(size)
 
@@ -63,8 +74,8 @@ def rndVsRnd(size):
 	if(game.checkDraw(world, moveCount)):
 		print("It's a draw!")
 
-def runRndGame(board_size, num_game):
-	world_list = np.zeros((board_size*board_size, board_size*board_size+3))
+def runRndAiGame(board_size, num_game):
+	world_list = np.zeros((board_size*board_size, 2*board_size*board_size+3)) # x,y will be inferred
 
 	world = game.initGameWorld(board_size)
 	movesLeft = game.numberMovesLeft(world)
@@ -74,26 +85,28 @@ def runRndGame(board_size, num_game):
 	while(movesLeft > 0) and (hasWon == False):
 		# player 1
 		if (movesLeft > 0) and (hasWon == False):
-			world, x, y = game.rndMoveXY(world, 1.0)
-			hasWon = game.checkWin(world, 1.0)
-
+			newWorld, x, y = game.rndMoveXY(world, 1)
+			hasWon = game.checkWin(world, 1) 
+			
 			if hasWon:
-				world_list[moveCount] = np.concatenate((flattenWorld(world), [x], [y], [1]), axis=0)
+				world_list[moveCount] = np.concatenate((flattenWorld(world), flattenWorld(newWorld), [x], [y], [1]), axis=0)
 			elif not hasWon:
-				world_list[moveCount] = np.concatenate((flattenWorld(world), [x], [y], [0]), axis=0)
-
+				world_list[moveCount] = np.concatenate((flattenWorld(world), flattenWorld(newWorld), [x], [y], [0]), axis=0)
+			# print(findXY(world, newWorld))
+			world = newWorld
 			moveCount = moveCount+1		
 
 		# player 2
 		if (movesLeft > 0) and (hasWon == False):
-			world, x, y = game.rndMoveXY(world, -1)
+			newWorld, x, y = game.rndMoveXY(world, -1)
 			hasWon = game.checkWin(world, -1)
 
 			if hasWon:
-				world_list[moveCount] = np.concatenate((flattenWorld(world), [x], [y], [0]), axis=0)
+				world_list[moveCount] = np.concatenate((flattenWorld(world), flattenWorld(newWorld), [x], [y], [0]), axis=0)
 			elif not hasWon:
-				world_list[moveCount] = np.concatenate((flattenWorld(world), [x], [y], [1]), axis=0) # world x,y 1
+				world_list[moveCount] = np.concatenate((flattenWorld(world), flattenWorld(newWorld), [x], [y], [1]), axis=0) # world x,y 1
 
+			world = newWorld
 			moveCount = moveCount+1			
 
 		if (movesLeft > 0):
@@ -111,15 +124,15 @@ def generateGameDataUsingRnd(board_size, num_game):
 	# perfect move, 1st player no centre and 2nd player
 	# xinput -> flattened board | 2 y outputs | outcome/reward
 	nn = board_size*board_size
-	xinput = np.zeros((num_game*nn, nn+3))
+	xinput = np.zeros((num_game*nn, 2*nn+3)) #x,y inferred from newWorld
 
 	for i in range(num_game):
-		rndGame = runRndGame(board_size, num_game)
+		rndGame = runRndAiGame(board_size, num_game)
 		for j in range(rndGame.shape[0]):
 			xinput[i+j] = rndGame[j]
 		i = i + rndGame.shape[0]-1
 
 	return xinput
 
-xinput = generateGameDataUsingRnd(3, 10)
-print(xinput)
+# xinput = generateGameDataUsingRnd(3, 1) #1000000
+# print(xinput)

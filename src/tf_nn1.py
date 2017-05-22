@@ -15,11 +15,22 @@ epochs = 40
 # the data, shuffled and split between train and test sets
 # (x_train, y_train), (x_test, y_test) = mnist.load_data()
 # xinput = np.loadtxt(open("training.txt"), delimiter=",")
+# b = a[a[:, 2] > 50.0]
 xinput = u.generateGameDataUsingRnd(3, 100000)
-x_train = xinput[:50000, :784] #input and out[put]
-y_train = xinput[:50000, -1]
-x_test = xinput[50000 : 60000, :784]
-y_test = xinput[50000 : 60000, -1]
+xwin = xinput[xinput[:, 20] == 1];
+print(xwin.shape)
+x_train = xwin[:50000, :20]
+y_train = xwin[:50000, 19:21]
+reward_train = xwin[:50000, -1]
+
+x_test = xwin[50000:100000, :20]
+y_test = xwin[50000:100000, 19:21]
+reward_test = xwin[50000:100000, -1]
+
+# x_train = xinput[:50000, :784] #input and out[put]
+# y_train = xinput[:50000, -1]
+# x_test = xinput[50000 : 60000, :784]
+# y_test = xinput[50000 : 60000, -1]
 
 print('x_train.shape: %s \ny_train.shape: %s \nx_test.shape: %s \ny_test.shape: %s' %(x_train.shape, y_train.shape, x_test.shape, y_test.shape))
 
