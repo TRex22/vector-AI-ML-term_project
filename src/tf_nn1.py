@@ -17,6 +17,8 @@ epochs = 40
 # xinput = np.loadtxt(open("training.txt"), delimiter=",")
 # b = a[a[:, 2] > 50.0]
 xinput = u.generateGameDataUsingRnd(3, 100000)
+np.savez_compressed("million_alphatoe.dat", xinput=xinput) 
+
 xwin = xinput[xinput[:, 20] == 1];
 print(xwin.shape)
 x_train = xwin[:50000, :20]
