@@ -17,7 +17,7 @@ epochs = 40
 # xinput = np.loadtxt(open("training.txt"), delimiter=",")
 # b = a[a[:, 2] > 50.0]
 print("generate data....")
-xinput = u.generateGameDataUsingRnd(3, 100)
+xinput = u.generateGameDataUsingRnd(3, 10)
 
 xwin = xinput[xinput[:, 20] == 1];
 print(xwin.shape)
