@@ -9,30 +9,34 @@ import h5py
 
 
 batch_size = 128
-num_classes = 2
+# num_classes = 2
 epochs = 40
+
+board_size = 3
+nn = board_size*board_size
+num_random_matches = 100000 #1000000
 
 # the data, shuffled and split between train and test sets
 # (x_train, y_train), (x_test, y_test) = mnist.load_data()
 # xinput = np.loadtxt(open("training.txt"), delimiter=",")
 # b = a[a[:, 2] > 50.0]
-xinput = u.generateGameDataUsingRnd(3, 100000)
+xinput = u.generateGameDataUsingRnd(3, num_random_matches)
 np.savez_compressed("million_alphatoe.dat", xinput=xinput) 
 
-xwin = xinput[xinput[:, 20] == 1];
-print(xwin.shape)
-x_train = xwin[:50000, :20]
-y_train = xwin[:50000, 19:21]
-reward_train = xwin[:50000, -1]
+xinput = u.generateGameDataUsingRnd(board_size, num_random_matches)
 
-x_test = xwin[50000:100000, :20]
-y_test = xwin[50000:100000, 19:21]
-reward_test = xwin[50000:100000, -1]
+xwin_player1 = xinput[xinput[:, 2*board_size*board_size+3] == 1]
+xdraw_player2 = xinput[xinput[:, 2*board_size*board_size+3] == 2] # player 2 draw as player 1 should never draw
+xdraw_player2 = xdraw_player2[xdraw_player2[:, 2*board_size*board_size+3] == 0.5] # 0 is a loss to player 1
 
-# x_train = xinput[:50000, :784] #input and out[put]
-# y_train = xinput[:50000, -1]
-# x_test = xinput[50000 : 60000, :784]
-# y_test = xinput[50000 : 60000, -1]
+print(xwin_player1.shape)
+x_train = xwin_player1[:50000, :board_size*board_size-1]
+y_train = xwin_player1[:50000, board_size*board_size:2*board_size*board_size-1]
+reward_train = xwin_player1[:50000, -1]
+
+x_test = xwin_player1[50000:100000, :board_size*board_size-1]
+y_test = xwin_player1[50000:100000, board_size*board_size:2*board_size*board_size-1]
+reward_test = xwin_player1[50000:100000, -1]
 
 print('x_train.shape: %s \ny_train.shape: %s \nx_test.shape: %s \ny_test.shape: %s' %(x_train.shape, y_train.shape, x_test.shape, y_test.shape))
 
@@ -41,11 +45,11 @@ print('x_train.shape: %s \ny_train.shape: %s \nx_test.shape: %s \ny_test.shape: 
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
-y_train = keras.utils.to_categorical(y_train, num_classes)
-y_test = keras.utils.to_categorical(y_test, num_classes)
+y_train = keras.utils.to_categorical(y_train, nn)
+y_test = keras.utils.to_categorical(y_test, nn)
 
 model = Sequential()
-model.add(Dense(9*9, activation='sigmoid', input_shape=(9,)))
+model.add(Dense(nn, activation='sigmoid', input_shape=(nn,)))
 model.add(Dense(9, activation='sigmoid'))
 model.add(Dense(9, activation='sigmoid'))
 # model.add(Dense(9, activation='sigmoid'))
