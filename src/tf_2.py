@@ -1,9 +1,9 @@
 import utils as u
-import keras
-from keras.datasets import mnist
-from keras.models import Sequential
-from keras.layers import Dense, Dropout
-from keras.optimizers import RMSprop
+# import keras
+# from keras.datasets import mnist
+# from keras.models import Sequential
+# from keras.layers import Dense, Dropout
+# from keras.optimizers import RMSprop
 import numpy as np
 import h5py
 
@@ -16,11 +16,13 @@ epochs = 40
 # (x_train, y_train), (x_test, y_test) = mnist.load_data()
 # xinput = np.loadtxt(open("training.txt"), delimiter=",")
 # b = a[a[:, 2] > 50.0]
-xinput = u.generateGameDataUsingRnd(3, 10000)
-np.savez_compressed("million_alphatoe.dat", xinput=xinput) 
+print("generate data....")
+xinput = u.generateGameDataUsingRnd(3, 100)
 
 xwin = xinput[xinput[:, 20] == 1];
 print(xwin.shape)
+
+np.savez_compressed("100_games.dat", xinput=xinput, xwin=xwin) 
 
 # y_train = xinput[:50000, -1]
 # x_test = xinput[50000 : 60000, :784]
