@@ -23,20 +23,22 @@ half_matches = num_random_matches/2
 # the data, shuffled and split between train and test sets
 xinput = u.generateGameDataUsingRnd(board_size, num_random_matches)
 
-xwin_player1 = xinput[xinput[:, 2*board_size*board_size+3] == 1]
-xdraw_player2 = xinput[xinput[:, 2*board_size*board_size+2] == 2] # player 2 draw as player 1 should never draw
-xdraw_player2 = xdraw_player2[xdraw_player2[:, 2*board_size*board_size+3] == 0.5] # 0 is a loss to player 1
+xwin_player1 = xinput[xinput[:, -1] == 1]
+xdraw_player2 = xinput[xinput[:, -2] == 2] # player 2 draw as player 1 should never draw
+xdraw_player2 = xdraw_player2[xdraw_player2[:, -1] == 0.5] # 0 is a loss to player 1
 
 half_matches = xwin_player1.shape[0]/2
 
-print(xwin_player1.shape)
-x_train = xwin_player1[:half_matches, :board_size*board_size]
-y_train = xwin_player1[:half_matches, board_size*board_size:2*board_size*board_size]
-reward_train = xwin_player1[:half_matches, -1]
+xwin_player1 = np.hstack((xwin_player1, xdraw_player2))
 
-x_test = xwin_player1[half_matches:num_random_matches, :board_size*board_size]
-y_test = xwin_player1[half_matches:num_random_matches, board_size*board_size:2*board_size*board_size]
-reward_test = xwin_player1[half_matches:num_random_matches, -1]
+print(xwin_player1.shape)
+x_train = xwin_player1[:800000, :board_size*board_size]
+y_train = xwin_player1[:800000, board_size*board_size:2*board_size*board_size]
+reward_train = xwin_player1[:800000, -1]
+
+x_test = xwin_player1[200000:1000000, :board_size*board_size]
+y_test = xwin_player1[200000:1000000, board_size*board_size:2*board_size*board_size]
+reward_test = xwin_player1[200000:1000000, -1]
 
 print('x_train.shape: %s \ny_train.shape: %s \nx_test.shape: %s \ny_test.shape: %s' %(x_train.shape, y_train.shape, x_test.shape, y_test.shape))
 np.savez_compressed("data/3_3_million.dat", xinput=xinput, xwin_player1=xwin_player1, xdraw_player2=xdraw_player2) 
