@@ -51,7 +51,7 @@ def numberMovesLeft(world):
 def checkDraw(world, moveCount):
 	size = world.shape[0]
 	# draw
-	if(moveCount == (size**2 - 1.0)):
+	if(moveCount == (size**2)):
 		return True
 	return False
 

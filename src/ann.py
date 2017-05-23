@@ -104,71 +104,203 @@ def NN3(world, player):
 	if movesLeft == 0:
 		return world
 
+	madeMove = False
 	data_dat = np.load('data/NN_natural_3_3.dat.npz')
+	tempWorld = world.copy()
+	iterations = 0
+
+	while madeMove == False and iterations < 1000:
+		data1 = np.vstack((data_dat['data1']))
+		x = np.hstack(([1.0], u.flattenWorld(tempWorld)))
+		layer1 = np.dot(x, data1)
+		layer1 = 1.0/(1.0 + np.exp(-layer1))
+
+		data2 = np.vstack((data_dat['data2']))
+		layer1 = np.hstack(([1.0], layer1))
+		layer2 = np.dot(layer1, data2)
+		layer2 = 1.0/(1.0 + np.exp(-layer2))
+
+		data3 = np.vstack((data_dat['data3']))
+		layer2 =  np.hstack(([1.0], layer2))
+		layer3 = np.dot(layer2, data3)
+		layer3 = 1.0/(1.0 + np.exp(-layer3))
+
+		x,y = determine_xy(layer3, size)
+		# tempWorld[x][y] = player
+		madeMove = game.checkMove(tempWorld, x, y)
+		# tempWorld[x][y] = 0
+		iterations = iterations+1
+
+	if(iterations >= 1000):
+		world, x, y = game.rndMoveXY(world, 1)
+	else:
+		world[x][y] = player
 	
-	data1 = np.vstack((data_dat['data1']))
-	x = np.hstack(([1.0], u.flattenWorld(world)))
-	layer1 = np.dot(x, data1)
-	layer1 = 1.0/(1.0 + np.exp(-layer1))
+	return world,x,y
 
-	data2 = np.vstack((data_dat['data2']))
-	layer1 = np.hstack(([1.0], layer1))
-	layer2 = np.dot(layer1, data2)
-	layer2 = 1.0/(1.0 + np.exp(-layer2))
+# 'data/NN_natural_5_5.dat.npz'
+def NN5(world, player):
+	size = world.shape[0]
+	movesLeft = game.numberMovesLeft(world)
+	if movesLeft == 0:
+		return world
 
-	data3 = np.vstack((data_dat['data3']))
-	layer2 =  np.hstack(([1.0], layer2))
-	layer3 = np.dot(layer2, data3)
-	layer3 = 1.0/(1.0 + np.exp(-layer3))
+	madeMove = False
+	data_dat = np.load('data/NN_natural_5_5.dat.npz')
+	tempWorld = world.copy()
+	iterations = 0
 
-	x,y = determine_xy(layer3, size)
-	print(x,y)
+	while madeMove == False and iterations < 1000:
+		data1 = np.vstack((data_dat['data1']))
+		x = np.hstack(([1.0], u.flattenWorld(tempWorld)))
+		layer1 = np.dot(x, data1)
+		layer1 = 1.0/(1.0 + np.exp(-layer1))
+
+		data2 = np.vstack((data_dat['data2']))
+		layer1 = np.hstack(([1.0], layer1))
+		layer2 = np.dot(layer1, data2)
+		layer2 = 1.0/(1.0 + np.exp(-layer2))
+
+		data3 = np.vstack((data_dat['data3']))
+		layer2 =  np.hstack(([1.0], layer2))
+		layer3 = np.dot(layer2, data3)
+		layer3 = 1.0/(1.0 + np.exp(-layer3))
+
+		x,y = determine_xy(layer3, size)
+		# tempWorld[x][y] = player
+		madeMove = game.checkMove(tempWorld, x, y)
+		# tempWorld[x][y] = 0
+		iterations = iterations+1
+
+	if(iterations >= 1000):
+		world, x, y = game.rndMoveXY(world, 1)
+	else:
+		world[x][y] = player
 	
-	world[x][y] = player
-	return world
+	return world,x,y
 
-def rndVsNN3():
-	world = game.initGameWorld(3)
-
-	print("Welcome to TicTacToe!")
-	print("\n####################")
-
-	game.printWorld(world)
-
+def rndVsNN(board_size, tprint=False):
+	world = game.initGameWorld(board_size)
 	movesLeft = game.numberMovesLeft(world)
 	hasWon = False
+	player1won = False
+	player2won = False
 	moveCount = 0
 
 	while(movesLeft > 0) and (hasWon == False):
 		# player 1
 		if (movesLeft > 0) and (hasWon == False):
-			print("Player 1:")
-			world = NN3(world, 1.0)
-			hasWon = game.checkWin(world, 1.0)
-
+			newWorld, x, y = game.rndMoveXY(world, -1)
+			hasWon = game.checkWin(newWorld, 1) 
+			
 			if hasWon:
-				print("Player 1 Won!")
-				game.printWorld(world)
-			moveCount = moveCount+1		
+				player1won = True
 
+			moveCount = moveCount+1	
+            
+		if (movesLeft > 0):
+			movesLeft = game.numberMovesLeft(world)
+            
 		# player 2
 		if (movesLeft > 0) and (hasWon == False):
+			if board_size == 3:
+				newWorld, x, y = NN3(world, 1)
+			elif board_size == 5:
+				newWorld, x, y = NN5(world, 1)
+			else:
+				newWorld, x, y = game.rndMoveXY(world, 1)
+
+			hasWon = game.checkWin(newWorld, 1)
+
+			if hasWon and not player1won:
+				player2won = True
+			# print(newWorld)
+			world = newWorld
+			moveCount = moveCount+1			
+
+		if (movesLeft > 0):
+			# print(world)
+			# game.printWorld(world)
+			movesLeft = game.numberMovesLeft(world)
+            
+	if(tprint):
+		if(game.checkDraw(world, moveCount)):
+			print("It's a draw!")
+
+		else:
+			if player1won:
+				print("player 1 wins!")
+			else:
+				print("player 2 wins!")
+		game.printWorld(world)
+
+	if(game.checkDraw(world, moveCount)):
+		return 0
+
+	else:
+		if player1won:
+			return 1
+		else:
+			return -1
+
+def NNVsRnd(board_size, tprint=False):
+	world = game.initGameWorld(board_size)
+	movesLeft = game.numberMovesLeft(world)
+	hasWon = False
+	player1won = False
+	player2won = False
+	moveCount = 0
+
+	while(movesLeft > 0) and (hasWon == False):
+		# player 1
+		if (movesLeft > 0) and (hasWon == False):
+			if board_size == 3:
+				newWorld, x, y = NN3(world, 1)
+			elif board_size == 5:
+				newWorld, x, y = NN5(world, 1)
+			else:
+				newWorld, x, y = game.rndMoveXY(world, 1)
+
+			hasWon = game.checkWin(world, 1) 
 			
-			print("Player 2:")
-			world = game.rndMove(world, -1)
+			if hasWon:
+				player1won = True
+
+			moveCount = moveCount+1	
+            
+		if (movesLeft > 0):
+			movesLeft = game.numberMovesLeft(world)
+            
+		# player 2
+		if (movesLeft > 0) and (hasWon == False):
+			newWorld, x, y = game.rndMoveXY(world, -1)
 			hasWon = game.checkWin(world, -1)
 
-			if hasWon:
-				print("Player 2 Won!")
-				game.printWorld(world)
+			if hasWon and not player1won:
+				player2won = True
+
+			world = newWorld
 			moveCount = moveCount+1			
 
 		if (movesLeft > 0):
 			movesLeft = game.numberMovesLeft(world)
+            
+	if(tprint):
+		if(game.checkDraw(world, moveCount)):
+			print("It's a draw!")
 
-		print("Moves Left: %d\n"%(movesLeft))
+		else:
+			if player1won:
+				print("player 1 wins!")
+			else:
+				print("player 2 wins!")
+		game.printWorld(world)
 
 	if(game.checkDraw(world, moveCount)):
-		print("It's a draw!")
+		return 0
 
-rndVsNN3()
+	else:
+		if player1won:
+			return 1
+		else:
+			return -1

@@ -66,6 +66,7 @@
 \documentclass[journal]{IEEEtran}
 \usepackage{blindtext}
 \usepackage{graphicx}
+% \usepackage{enumitem}
 
 % Some very useful LaTeX packages include:
 % (uncomment the ones you want to load)
@@ -387,7 +388,7 @@
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{COMS4030A: Adaptive Computation and Machine Learning Term Project, Making a Size Invariant AI Agent for Tic-Tac-Toe}
+\title{COMS4030A: Adaptive Computation and Machine Learning Term Project, An Investigation into AI Agents for Tic-Tac-Toe}
 %
 %
 % author names and IEEE memberships
@@ -455,7 +456,7 @@
 
 \begin{abstract}
 %\boldmath
-\blindtext[1]
+This project was an attempt to make a neural network based AIs which could play Tic-Tac-Toe better than random agents on any sized game board, however this project was a failure. This was due to underestimating the time constraints and how to generate the right data set to use for this task. Another bad estimation was assuming the generalisation over board sizes was possible and would produce adequate results - this was not the case.
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
@@ -466,7 +467,7 @@
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-Machine Learning, Artificial Intelligence, TicTacToe, ANN
+Machine Learning, Artificial Intelligence, Tic-Tac-Toe, ANN
 \end{IEEEkeywords}
 
 
@@ -490,41 +491,64 @@ Machine Learning, Artificial Intelligence, TicTacToe, ANN
 People have always had a fascination with games and the problems these domains present. Games can become computationally complex and adaptive algorithms can play an important role in making good AI agents. There are many approaches to playing games and different games will lend themselves to different methods and algorithms. \cite{AIModern}
 
 \subsection{Problem Statement}
-\blindtext
+A comparison of non-tree search method based AI agents to play Tic-Tac-Toe in different board sizes.
 
 \section{Background}
 \subsection{The Game Tic-Tac-Toe}
-\blindtext
-
-\subsection{The Rules of the game}
-\blindtext
+Tic-Tac-Toe also known as noughts and crosses is a deterministic, zero-sum game where the object of the game is to produce a complete line of X's or O's in any direction on the board (which is usually 3x3). It is a very simple game which always has a set of optimal moves. The first player always has an unfair advantage whilst the second player has the ability to force a draw. The first player should never lose. \cite{AIModern}
 
 \subsection{Artificial Neural Networks}
-\blindtext
+Artificial Neural Networks (ANN) are computational simulations inspired by the biology behind the operation of a brain. These are computational networks of nodes where each node is a mathematical representation of a neuron. These networks tend to have a structure where each layer produces the next layer in a forward fashion however there are many different types and implementations of neural networks. \cite{mitchell}
 
-\subsection{Game Tree Search}
-\blindtext
+% \subsection{Game Tree Search}
+
 
 \section{Methodology}
 \subsection{General Assumptions}
+I have assumed that a randomly generated data-set of one million game states is sufficient to train any of the algorithms to their maximum potential. I have also assumed that all drawn diagrams were drawn using \url{http://draw.io/} and charts were made with Microsoft Excel 2013. All results are averages of many experimental runs being performed.
 
 \subsection{Testing Method}
+I built a game supervisor which handles and maintains the game state for both agents. This allowed the results to be consistent between different AI agents per run. I ran multiple game simulations between all the AI implementations and the random agent. This acts as the base-line result. The performance metrics used looked at the win/loss ratio of each AI agent. Two board sizes were tested, namely a 3x3 and 5x5. These were averages taken over running 100's of games.
 
 \subsection{Implementation}
+All programming was done in Python. I used numpy, and the standard Python libraries in my implementations of Tic-Tac-Toe and the AI agents I tested. The agents which made use of algorithms which needed training were trained separately and their data was saved and recalled using the numpy save and load features when those AIs were tested. Initially I generated an array of a million random game actions where each row is a game state with an associated action and the final result for player 1 for that entire game. I generated a data-set for each board size. All algorithms which need data made use of these data-sets. I split this data set into training and testing data with a 80 to 20 split in favour of the training data. Validation was done with fresh data.
 
-\subsubsection{Artificial Neural Network}
+\subsection{Artificial Neural Network}
+The artificial neural networks had a very similar structure. They both have three layers where each layer has the same number of nodes as there are elements in their respective boards. Every layer uses the sigmoid as their activation function and bias values for the layers (excluding output) are used. The networks were trained used stochastic gradient descent. The final weights generated after 24 epochs were saved and when the respective network was applied the weights were multiplied together with a given input matrix to get the result - which is the next move for the agent to make. 
 
-\subsection{Experimental Setup}
-\blindtext
-
+\subsection{Using Machine Learning to Deal with Board Sizes}
+I attempted to make an AI which can play any sized board. The first method tried was to apply principle components analysis (PCA) to standardise the number of inputs and outputs. The outputs would then be mapped into proper coordinates to make a move. This failed because the data does not lend itself to PCA. The results from generating the principle components meant that most the data from the game state had been lost and could not be recovered. This was due to how each player was represented by the same numerical value (for each respectively) on the board.
+\\
+My second attempt was to use an auto-encoder to achieve the same goal. This attempt also failed because I could not get the neural network to produce accurate enough results to meaningfully use. 
 
 \section{Results}
-\blindtext
+The results of the neural network AIs were terrible. Running an average of 100 games against the random agent for both neural network agents showed them both producing results far worse than random.
+
+\begin{table}[]
+\centering
+\caption{Results of Agents}
+\label{my-label}
+\begin{tabular}{llllll}
+\textbf{Agent} & \textbf{Win (\%)} & \textbf{Draw (\%)} & \textbf{Loss (\%)} &  &  \\
+\textbf{3x3}   & 1                 & 40                 & 59                 &  &  \\
+\textbf{5x5}   & 1                 & 34                 & 65                 &  &  \\
+               &                   &                    &                    &  &  \\
+               &                   &                    &                    &  &  \\
+               &                   &                    &                    &  &  \\
+               &                   &                    &                    &  & 
+\end{tabular}
+\end{table}
+
+
 \subsection{Discussion and Comparison of Results}
+The 3x3 agent performed better than the 5x5 agent due to the state space of the board being smaller. The two most likely reasons why both the agents failed to perform with any kind of positive result is because the data set generated was not good. There was a faulty assumption that any move that leads to a match win is a positive move. Another fault was that the network structures of the agents were far too simple for the complexity of the problem being approximated. The attempts to produce an AI which could handle multiple board sizes also failed due to the data-set as well as the methods being employed being unable to handle the actual game states because the numbers do not translate well into other domains.
+
+\subsection{Problems Faced}
+I underestimated the amount of time I would need to both develop and train the agents. I also did not allot time for any unforeseen problems arising. The data-set I generated was terrible. It not not properly reflect the good move set since the moves were randomly generated. This means that a bad move could still have a win outcome as the other random agent may still make mistakes.
 
 
 \section{Conclusion}
-\blindtext
+This project was a failure. I should have used a better data-set and not attempted to generalise the board size. The agents produced were not good at playing the game, rather they were worse than random. A more complex network structure and a better data-set would have produced far better results.
 
 
 
@@ -545,16 +569,18 @@ People have always had a fascination with games and the problems these domains p
 %
 
 
-\appendices
-\section{Proof of the First Zonklar Equation}
-Some text for the appendix.
+% \appendices
+% \section{Proof of the First Zonklar Equation}
+% Some text for the appendix.
 
 % use section* for acknowledgement
-\section*{Acknowledgment}
-
-
-The authors would like to thank...
-
+\section*{Glossary of Terms}
+\begin{itemize}
+    \item[] \itab{\textbf{AI}}      \tab{-} \tab{Artificial Intelligence}\\
+    \item[] \itab{\textbf{ACML}}    \tab{-} \tab{Adaptive Computation and Machine Learning}\\
+    \item[] \itab{\textbf{HPC}}       \tab{-} \tab{High Performance Computing}\\
+    \item[] \itab{\textbf{PCA}}     \tab{-} \tab{Principle Components Analysis}\\
+\end{itemize}
 
 % Can use something like this to put references on a page
 % by themselves when using endfloat and the captionsoff option.
@@ -591,6 +617,11 @@ The authors would like to thank...
 \bibitem{AIModern}
 Russell, Stuart and Norvig, Peter, \emph{{Artificial Intelligence: A Modern Approach}}, 3rd~ed.\hskip 1em plus
   0.5em minus 0.4em\relax Pearson, 2009.
+  
+\bibitem{mitchell}
+Mitchell, T.M. \emph{{Machine Learning}}, \hskip 1em plus
+  0.5em minus 0.4em\relax McGraw-Hill, 1997. 
+
 
 \end{thebibliography}
 

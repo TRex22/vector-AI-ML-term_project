@@ -54,16 +54,16 @@ print(xdraw_player2.shape)
 
 np.savez_compressed("5_5_million.dat", xinput=xinput, xwin_player1=xwin_player1, xdraw_player2=xdraw_player2) 
 
-print("15x15")
-board_size = 15
-xinput = u.generateGameDataUsingRnd(board_size, num_random_matches)
+# print("15x15")
+# board_size = 15
+# xinput = u.generateGameDataUsingRnd(board_size, num_random_matches)
 
-xwin_player1 = xinput[xinput[:, 2*board_size*board_size+3] == 1]
+# xwin_player1 = xinput[xinput[:, 2*board_size*board_size+3] == 1]
 
-xdraw_player2 = xinput[xinput[:, 2*board_size*board_size+3] == 2] # player 2 draw as player 1 should never draw
-xdraw_player2 = xdraw_player2[xdraw_player2[:, 2*board_size*board_size+3] == 0.5] # 0 is a loss to player 1
+# xdraw_player2 = xinput[xinput[:, 2*board_size*board_size+3] == 2] # player 2 draw as player 1 should never draw
+# xdraw_player2 = xdraw_player2[xdraw_player2[:, 2*board_size*board_size+3] == 0.5] # 0 is a loss to player 1
 
-print(xwin_player1.shape)
-print(xdraw_player2.shape)
+# print(xwin_player1.shape)
+# print(xdraw_player2.shape)
 
-np.savez_compressed("15_15_million.dat", xinput=xinput, xwin_player1=xwin_player1, xdraw_player2=xdraw_player2) 
+# np.savez_compressed("15_15_million.dat", xinput=xinput, xwin_player1=xwin_player1, xdraw_player2=xdraw_player2) 
