@@ -11,13 +11,13 @@ batch_size = 128
 # num_classes = 2
 epochs = 24
 
-board_size = 3
+board_size = 5
 nn = board_size*board_size
 num_random_matches = 1000000
 half_matches = num_random_matches/2
 
 # the data, shuffled and split between train and test sets
-xinput = np.load('data/3_3_million.dat.npz')
+xinput = np.load('data/5_5_million.dat.npz')
 xinput = xinput['xinput']
 
 half_matches = xinput.shape[0]/2
@@ -43,6 +43,7 @@ print(x_test.shape[0], 'test samples')
 
 model = Sequential()
 model.add(Dense(nn, activation='sigmoid', input_shape=(nn,)))
+model.add(Dense(9, activation='sigmoid'))
 model.add(Dense(5, activation='sigmoid'))
 model.add(Dense(3, activation='sigmoid'))
 model.add(Dense(5, activation='sigmoid'))
@@ -77,6 +78,7 @@ data2 = np.vstack((bias[1][0], kernel[1][0]))
 data3 = np.vstack((bias[2][0], kernel[2][0]))
 data4 = np.vstack((bias[3][0], kernel[3][0]))
 data5 = np.vstack((bias[4][0], kernel[4][0]))
+data6 = np.vstack((bias[5][0], kernel[5][0]))
 # data4 = np.vstack((bias[3], kernel[3]))
 
-np.savez_compressed("data/autoencoder_3.dat", score=score, data1=data1, data2=data2, data3=data3, data4=data4, data5=data5)
+np.savez_compressed("data/autoencoder_5.dat", score=score, data1=data1, data2=data2, data3=data3, data4=data4, data5=data5, data6=data6)
