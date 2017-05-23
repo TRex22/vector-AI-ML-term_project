@@ -23,12 +23,12 @@ xinput = xinput['xinput']
 half_matches = xinput.shape[0]/2
 
 print(xinput.shape)
-x_train = xinput[:half_matches, :board_size*board_size]
-y_train = xinput[:half_matches, board_size*board_size:2*board_size*board_size]
+x_train = xinput[:800000, :board_size*board_size]
+y_train = xinput[:800000, board_size*board_size:2*board_size*board_size]
 reward_train = xinput[:half_matches, -1]
 
-x_test = xinput[half_matches:num_random_matches, :board_size*board_size]
-y_test = xinput[half_matches:num_random_matches, board_size*board_size:2*board_size*board_size]
+x_test = xinput[800000:1000000, :board_size*board_size]
+y_test = xinput[800000:1000000, board_size*board_size:2*board_size*board_size]
 reward_test = xinput[half_matches:num_random_matches, -1]
 
 print('x_train.shape: %s \ny_train.shape: %s \nx_test.shape: %s \ny_test.shape: %s' %(x_train.shape, y_train.shape, x_test.shape, y_test.shape))
