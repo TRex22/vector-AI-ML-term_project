@@ -17,7 +17,7 @@ num_random_matches = 1000000
 half_matches = num_random_matches/2
 
 # the data, shuffled and split between train and test sets
-xinput = np.load('data/NN_natural_3_3.dat.npz')
+xinput = np.load('data/3_3_million.dat.npz')
 xinput = xinput['xinput']
 
 half_matches = xinput.shape[0]/2
